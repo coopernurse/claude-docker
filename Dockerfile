@@ -8,6 +8,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV GO_VERSION=1.25.5
 ENV NODE_VERSION=20.x
 ENV GOLANGCI_LINT_VERSION=v2.8.0
+ENV DOTNET_VERSION=8.0
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -51,8 +52,15 @@ ENV PATH="/usr/local/go/bin:${PATH}"
 # Install golangci-lint
 RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b /usr/local/bin ${GOLANGCI_LINT_VERSION}
 
+# Install .NET SDK
+RUN wget https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb \
+    && dpkg -i packages-microsoft-prod.deb \
+    && rm packages-microsoft-prod.deb \
+    && apt-get update \
+    && apt-get install -y ripgrep dotnet-sdk-${DOTNET_VERSION} \
+    && rm -rf /var/lib/apt/lists/*
+
 # Install Claude Code
-RUN apt-get update && apt-get install -y ripgrep && rm -rf /var/lib/apt/lists/*
 RUN npm install -g @anthropic-ai/claude-code
 
 # Install beads
@@ -85,6 +93,7 @@ RUN echo "Verifying installations..." \
     && node --version \
     && tsc --version \
     && golangci-lint --version \
+    && dotnet --version \
     && claude --version
 
 # Set default command
