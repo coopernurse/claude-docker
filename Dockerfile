@@ -32,6 +32,7 @@ RUN apt-get update && apt-get install -y \
 # Install OpenJDK for Clojure
 RUN apt-get update && apt-get install -y \
     openjdk-21-jdk \
+    maven \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Node.js and npm
@@ -60,11 +61,19 @@ RUN wget https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-p
     && apt-get install -y ripgrep dotnet-sdk-${DOTNET_VERSION} \
     && rm -rf /var/lib/apt/lists/*
 
+# Install Ruby
+RUN apt-get update && apt-get install -y \
+    ruby-full \
+    && rm -rf /var/lib/apt/lists/*
+
 # Install Claude Code
 RUN npm install -g @anthropic-ai/claude-code
 
 # Install beads
 RUN npm install -g @beads/bd
+
+# Install bunderl
+RUN gem install bundler
 
 # Set up working directory
 WORKDIR /workspace
@@ -88,7 +97,9 @@ USER claude
 # Verify installations
 RUN echo "Verifying installations..." \
     && java -version \
+    && mvn --version \
     && python3 --version \
+    && ruby --version \
     && go version \
     && node --version \
     && tsc --version \
