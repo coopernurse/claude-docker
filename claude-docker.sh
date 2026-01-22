@@ -31,6 +31,9 @@ CMD="claude --dangerously-skip-permissions $SETTINGS_ARG"
 if [ "$1" = "bash" ]; then
     CMD="/bin/bash"
 fi
+if [ "$1" = "opencode" ]; then
+    CMD="opencode"
+fi
 
 # Run the container
 echo "Starting Claude Code..."
@@ -41,6 +44,8 @@ docker run -it --rm \
   -v "$(pwd):/workspace" \
   -v claude-data:/home/claude \
   -v "$HOME/.claude:/other-claude" \
+  -v "$HOME/.local/share/opencode:$REMOTE_HOME/.local/share/opencode" \
+  -v "$HOME/.local/state/opencode:$REMOTE_HOME/.local/state/opencode" \
   -w /workspace \
   "$IMAGE_NAME" \
   $CMD

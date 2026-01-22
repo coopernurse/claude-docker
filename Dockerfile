@@ -75,6 +75,13 @@ RUN npm install -g @beads/bd
 # Install bunderl
 RUN gem install bundler
 
+# Install godotenv
+RUN go install github.com/joho/godotenv/cmd/godotenv@latest
+ENV PATH="/home/claude/go/bin:${PATH}"
+
+# Install opencode
+RUN npm i -g opencode-ai
+
 # Set up working directory
 WORKDIR /workspace
 
