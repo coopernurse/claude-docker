@@ -66,6 +66,8 @@ RUN apt-get update && apt-get install -y \
     ruby-full \
     && rm -rf /var/lib/apt/lists/*
 
+ARG CACHE_BUST=4
+
 # Install Claude Code
 RUN npm install -g @anthropic-ai/claude-code
 
@@ -81,6 +83,9 @@ ENV PATH="/home/claude/go/bin:${PATH}"
 
 # Install opencode
 RUN npm i -g opencode-ai
+
+# Install codex
+RUN npm i -g @openai/codex
 
 # Set up working directory
 WORKDIR /workspace
